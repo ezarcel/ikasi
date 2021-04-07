@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>[{(home)}] - [{(product-name)}]</title>
+
+		<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+
+		<script>
+			var exports = {}
+		</script>
+		<script type="module" src="./js/index.js"></script>
+		<link rel="stylesheet" href="./css/index.css">
+	</head>
+
+	<body>
+		<div id="wrapper">
+			<div class="header">
+				<img src="../img/logo_with_text.png" alt="ikasi logo" height=95>
+				<h2>[{(open-or-create-a-file)}]</h2>
+			</div>
+			<div class="strip">
+				<div class="option open">
+					<i class="fas fa-folder-open fa-pull-left"></i>
+					<span>[{(open)}]</span>
+				</div>
+				<div class="option new new-mind-map">
+					<i class="fas fa-plus-circle fa-pull-left"></i>
+					<span>[{(new-mind-map)}]</span>
+				</div>
+				<div class="option new new-deck-of-cards">
+					<i class="fas fa-plus-circle fa-pull-left"></i>
+					<span>[{(new-deck-of-cards)}]</span>
+				</div>
+				<div class="option new new-to-do-list">
+					<i class="fas fa-plus-circle fa-pull-left"></i>
+					<span>[{(new-to-do-list)}]</span>
+				</div>
+			</div>
+			<div id="file-list-wrapper">
+				<h3>[{(recent-files)}]</h3>
+				<div id="file-list"></div>
+			</div>
+		</div>
+	</body>
+
+</html>

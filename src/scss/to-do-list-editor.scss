@@ -1,0 +1,60 @@
+@import "theming";
+
+* {
+	box-sizing: border-box;
+	user-select: none;
+	outline: none;
+}
+
+body {
+	#wrapper {
+		padding: 20px;
+		
+		@media (max-width: 800px) {
+			margin: 0;
+			width: 100%;
+		}
+
+		@media (min-width: 801px) {
+			margin: 0 auto;
+			width: 75vw;
+		}
+
+		.header {
+			display: flex;
+			flex-direction: row;
+			place-items: center;
+			margin: 0 0 20px 0;
+			
+			h2 {
+				flex: 1 1 auto;
+				margin: 0;
+			}
+
+			#new-to-do {
+				cursor: pointer;
+			}
+		}
+
+		to-do:not(:last-child) {
+			margin: 0 0 2.5px 0;
+		}
+	}
+	
+	#new-to-do {
+		background-color: var(--bg-alt-alpha75);
+		bottom: 12.5px;
+		border-radius: 7.5px;
+		color: var(--bg);
+		display: flex;
+		padding: 10px;
+		position: fixed;
+		place-items: center;
+		right: 12.5px;
+		cursor: pointer;
+		font-size: 12px;
+		height: 41.6px;
+		width: 41.6px;
+		justify-content: center;
+	}
+}

@@ -1,0 +1,190 @@
+@import "theming";
+
+* {
+	box-sizing: border-box;
+	user-select: none;
+	outline: none;
+}
+
+body {
+	margin: 0;
+	height: 100vh;
+	background-color: #aaa;
+	display: flex;
+	flex-direction: column;
+
+	&.screenshot {
+		overflow: auto;
+
+		.titlebar {
+			display: none;
+		}
+
+		.container-after-titlebar {
+			inset: auto !important;
+			position: static !important;
+			overflow: visible !important;
+		}
+	}
+
+	#wrapper {
+		overflow: auto;
+	}
+
+	#settings-inner {
+		text-align: left;
+		display: flex;
+		flex-direction: column;
+
+		fieldset {
+			border: 1px solid var(--bg-alt-shade3);
+			border-radius: 7.5px;
+			padding: 10px;
+			margin: 0;
+
+			legend {
+				font-size: 16px;
+				margin: 0;
+			}
+
+			span {
+				font-size: 14px;
+
+				&.range-value {
+					margin-right: .6em;
+				}
+			}
+
+			& > * {
+				display: flex;
+				flex-direction: row;
+				place-items: center;
+				height: 25px;
+
+				&:not(:first-child):not(:last-child) {
+					margin: 5px 0;
+				}
+
+				&:nth-child(2) {
+					margin-top: -7.5px !important;
+				}
+
+				& > *:nth-child(2) {
+					margin-left: auto;
+				}
+			}
+		}
+	}
+
+	&:not(.screenshot) {
+		overflow: hidden;
+	}
+
+	* {
+		box-sizing: border-box;
+	}
+
+	header {
+		display: flex;
+		flex-direction: row;
+		padding: 12.5px;
+		height: 70px;
+		place-items: center;
+
+		img {
+			margin-right: 17.5px;
+		}
+
+		ul {
+			display: grid;
+			grid-auto-flow: column;
+			gap: 15px;
+			height: max-content;
+			padding: 0;
+			margin: 0;
+			list-style: none;
+
+			li {
+				font-size: 14px;
+				cursor: pointer;
+			}
+		}
+	}
+
+	#bubble-container {
+		position: relative;
+		flex: 1 1 auto;
+		overflow: auto;
+	}
+
+	map-bubble {
+		position: absolute;
+	}
+
+	svg.joining-line {
+		position: absolute;
+		top: 0;
+		left: 0;
+		z-index: -999;
+	}
+
+	#exporting-overlay {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		backdrop-filter: blur(15px);
+
+		.inner {
+			background-color: #fffa;
+			padding: 17.5px;
+			border-radius: 12.5px;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			display: grid;
+			gap: 12.5px;
+			text-align: center;
+
+			img {
+				margin: auto;
+			}
+
+			.undefined-progress {
+				position: relative;
+				width: 100%;
+				height: 10px;
+				background-color: #aaa;
+
+				&::before {
+					content: '';
+					position: absolute;
+					height: 100%;
+					width: 35px;
+					animation: loading 2s infinite linear;
+					background-color: #fff;
+				}
+			}
+		}
+	}
+
+	#exporting-overlay {
+		display: none;
+	}
+}
+
+@keyframes loading {
+	0% {
+		left: 0;
+	}
+
+	50% {
+		left: calc(100% - var(--width, 10px));
+	}
+
+	100% {
+		left: 0;
+	}
+}

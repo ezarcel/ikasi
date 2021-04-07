@@ -1,0 +1,80 @@
+@import "theming";
+
+* {
+	box-sizing: border-box;
+	user-select: none;
+	outline: none;
+}
+
+html,
+html body,
+html body.swal2-height-auto,
+html body #container,
+html body #container .card-container {
+	height: 100% !important;
+}
+
+html,
+html body #container {
+	scroll-snap-type: x mandatory;
+	scroll-behavior: smooth;
+}
+
+body {
+	#container {
+		display: flex;
+		flex-direction: row;
+		margin: 0;
+		overflow: auto;
+
+		.card-container {
+			scroll-snap-align: start;
+			display: flex;
+			width: 100vw;
+			flex: 0 0 auto;
+			place-items: center;
+			justify-content: center;
+
+			i-card {
+				height: 75vh;
+				width: 75vw;
+			}
+		}
+	}
+
+	#controls,
+	#new-card {
+		background-color: var(--bg-alt-alpha75);
+		bottom: 12.5px;
+		border-radius: 7.5px;
+		color: var(--bg);
+		display: flex;
+		padding: 10px;
+		position: fixed;
+		place-items: center;
+	}
+	
+	#controls {
+		flex-direction: row;
+		left: 50%;
+		transform: translateX(-50%);
+		
+		i {
+			font-size: 12px;
+			cursor: pointer;
+		}
+		
+		#page-indicator {
+			margin: 0 10px;
+		}
+	}
+	
+	#new-card {
+		right: 12.5px;
+		cursor: pointer;
+		font-size: 12px;
+		height: 41.6px;
+		width: 41.6px;
+		justify-content: center;
+	}
+}

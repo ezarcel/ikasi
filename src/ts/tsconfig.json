@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"esModuleInterop": true,
+		"lib": [
+			"DOM",
+			"DOM.Iterable",
+			"ESNext"
+		],
+		"module": "CommonJS",
+		"moduleResolution": "Node",
+		"noImplicitAny": true,
+		"outDir": "../js",
+		"removeComments": true,
+		"rootDir": "./",
+		"sourceMap": true,
+		"target": "ESNext"
+	}
+}

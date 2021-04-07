@@ -1,0 +1,44 @@
+{
+	"name": "ikasi",
+	"version": "1.0.0",
+	"description": "",
+	"main": "./js/app.js",
+	"scripts": {
+		"build:windows-x64": "npm run compile:* && node ./js/build.js windows-x64",
+		"build:linux-x64-flatpak": "npm run compile:* && node ./js/build.js linux-x64-flatpak",
+		"compile:*": "npm run compile:client-ts && npm run compile:sass && npm run compile:server-ts",
+		"compile:client-ts": "npx tsc -p ./src/ts/tsconfig.json",
+		"compile:sass": "npx sass ./src/scss:./src/css -s compressed --update",
+		"compile:server-ts": "npx tsc -p ./tsconfig.json",
+		"start": "npm run compile:* && electron .",
+		"start:dev": "electron --trace-warnings .",
+		"watch:client-ts": "npx tsc -w -p ./src/ts/tsconfig.json",
+		"watch:sass": "npx sass ./src/scss:./src/css -s compressed --update --watch",
+		"watch:server-ts": "npx tsc -w -p ./tsconfig.json"
+	},
+	"author": "ezarcel",
+	"license": "UNLICENSED",
+	"dependencies": {
+		"custom-electron-titlebar": "^3.2.6",
+		"electron-squirrel-startup": "^1.0.0",
+		"fs-extra": "^9.1.0",
+		"mime-types": "^2.1.30",
+		"moment": "^2.29.1",
+		"puppeteer": "^8.0.0",
+		"sweetalert2": "^10.15.7",
+		"uuid": "^8.3.2"
+	},
+	"devDependencies": {
+		"@types/fs-extra": "^9.0.10",
+		"@types/mime-types": "^2.1.0",
+		"@types/node": "^14.14.37",
+		"@types/puppeteer": "^5.4.3",
+		"@types/sass": "^1.16.0",
+		"@types/uuid": "^8.3.0",
+		"electron": "^12.0.2",
+		"electron-packager": "^15.2.0",
+		"electron-winstaller": "^5.0.0",
+		"sass": "^1.32.8",
+		"typescript": "^4.2.3"
+	}
+}
