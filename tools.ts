@@ -38,4 +38,4 @@ export async function recursive(startPath: string, callback: (fullPath: string) 
 	doIt(_startPath, 0)
 }
 
-export const appPath = app.isPackaged ? p.join(process.resourcesPath, "app") : process.cwd()
+export const appPath = app?.isPackaged ? p.join(process.resourcesPath, "app") : process.cwd()

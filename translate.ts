@@ -15,16 +15,13 @@ export async function importTranslations(language?: string) {
 	return translations
 }
 
-export async function translateString(str: string, language: string) {
+export async function translateString(string: string, language: string) {
 	const translations = await importTranslations()
 	if (!translations[ language ]) throw Error(`Unrecognized language "${language}"`)
 
-	let _str = str.slice(0)
-	Object.keys((translations ?? {})[ language ] ?? {}).forEach(translation =>
-		_str = _str.split(`[{(${translation})}]`).join((translations[ language ] ?? {})[ translation ])
-	)
-
-	return _str
+	return Object.keys((translations ?? {})[ language ] ?? {}).reduce((acc, key) =>
+		acc.split(`[{(${key})}]`).join((translations[ language ] ?? {})[ key ])
+		, string)
 }
 
 async function prettifyTranslations() {

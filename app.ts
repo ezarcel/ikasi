@@ -21,7 +21,7 @@ app.whenReady().then(async () => {
 			data: [ ".html", ".css", ".js" ].includes(p.extname(url))
 				? Buffer.from(await translateString(data.toString(), app.getLocale() in await importTranslations() ? app.getLocale() : "en"))
 				: data,
-			mimeType: mime.lookup(url) as string
+			mimeType: mime.lookup(url) as any
 		})
 	})
 
