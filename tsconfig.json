@@ -1,22 +1,15 @@
 {
-	"compilerOptions": {
-		"baseUrl": "./",
-		"esModuleInterop": true,
-		"lib": [
-			"DOM",
-			"DOM.Iterable",
-			"ES2017"
-		],
-		"module": "CommonJS",
-		"moduleResolution": "node",
-		"noImplicitAny": true,
-		"outDir": "./js",
-		"removeComments": true,
-		"rootDir": "./",
-		"target": "ES2017"
-	},
-	"exclude": [
-		"./node_modules",
-		"./src"
-	]
+  "compilerOptions": {
+    "baseUrl": "./",
+    "esModuleInterop": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2017"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "outDir": "./js",
+    "removeComments": true,
+    "rootDir": "./",
+    "target": "ES2017"
+  },
+  "exclude": ["./node_modules", "./src"]
 }

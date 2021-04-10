@@ -1,16 +1,16 @@
 class ToDo extends HTMLElement implements IToDo {
-	#ready: boolean = false
+  #ready: boolean = false;
 
-	#toDo: HTMLDivElement
-	#title: HTMLElement
-	#description: HTMLElement
-	#checkbox: HTMLInputElement
-	#delete: HTMLInputElement
-	#date: HTMLInputElement
-	#time: HTMLInputElement
-	constructor() {
-		super()
-		this.attachShadow({ mode: "open" }).innerHTML = `
+  #toDo: HTMLDivElement;
+  #title: HTMLElement;
+  #description: HTMLElement;
+  #checkbox: HTMLInputElement;
+  #delete: HTMLInputElement;
+  #date: HTMLInputElement;
+  #time: HTMLInputElement;
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' }).innerHTML = `
 			<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 			<style>
 				* {
@@ -158,59 +158,79 @@ class ToDo extends HTMLElement implements IToDo {
 					<i class="fas fa-trash"></i>
 				</div>
 			</div>
-		`
+		`;
 
-		this.#toDo = this.shadowRoot.querySelector("#to-do")
-		this.#title = this.shadowRoot.querySelector("#title")
-		this.#description = this.shadowRoot.querySelector("#description")
-		this.#checkbox = this.shadowRoot.querySelector("#checkbox")
-		this.#delete = this.shadowRoot.querySelector("#delete")
-		this.#date = this.shadowRoot.querySelector("#date")
-		this.#time = this.shadowRoot.querySelector("#time")
+    this.#toDo = this.shadowRoot.querySelector('#to-do');
+    this.#title = this.shadowRoot.querySelector('#title');
+    this.#description = this.shadowRoot.querySelector('#description');
+    this.#checkbox = this.shadowRoot.querySelector('#checkbox');
+    this.#delete = this.shadowRoot.querySelector('#delete');
+    this.#date = this.shadowRoot.querySelector('#date');
+    this.#time = this.shadowRoot.querySelector('#time');
 
-		this.addEventListener("blur", () => {
-			this.dispatchEvent(new CustomEvent("edited"))
-		})
-		this.#checkbox.addEventListener("input", () => {
-			this.dispatchEvent(new CustomEvent("edited"))
-		})
+    this.addEventListener('blur', () => {
+      this.dispatchEvent(new CustomEvent('edited'));
+    });
+    this.#checkbox.addEventListener('input', () => {
+      this.dispatchEvent(new CustomEvent('edited'));
+    });
 
-		this.#delete.addEventListener("click", () => {
-			this.dispatchEvent(new CustomEvent("delete"))
-		})
-	}
-	connectedCallback() {
-		if (!this.#ready) {
-			this.#ready = true
-			this.dispatchEvent(new CustomEvent("ready"))
-		}
+    this.#delete.addEventListener('click', () => {
+      this.dispatchEvent(new CustomEvent('delete'));
+    });
+  }
+  connectedCallback() {
+    if (!this.#ready) {
+      this.#ready = true;
+      this.dispatchEvent(new CustomEvent('ready'));
+    }
 
-		this.#toDo.classList.add("animatable")
-	}
+    this.#toDo.classList.add('animatable');
+  }
 
-	get description() { return this.#description.innerText }
-	set description(description) { this.#description.innerText = description }
+  get description() {
+    return this.#description.innerText;
+  }
+  set description(description) {
+    this.#description.innerText = description;
+  }
 
-	get done() { return this.#checkbox.checked }
-	set done(done) { this.#checkbox.checked = done }
+  get done() {
+    return this.#checkbox.checked;
+  }
+  set done(done) {
+    this.#checkbox.checked = done;
+  }
 
-	get dueDate() { return this.#date.valueAsNumber || null }
-	set dueDate(dueDate) { this.#date.valueAsNumber = dueDate }
+  get dueDate() {
+    return this.#date.valueAsNumber || null;
+  }
+  set dueDate(dueDate) {
+    this.#date.valueAsNumber = dueDate;
+  }
 
-	get dueTime() { return this.#time.valueAsNumber || null }
-	set dueTime(dueDate) { this.#time.valueAsNumber = dueDate }
+  get dueTime() {
+    return this.#time.valueAsNumber || null;
+  }
+  set dueTime(dueDate) {
+    this.#time.valueAsNumber = dueDate;
+  }
 
-	get title() { return this.#title.innerText }
-	set title(title) { this.#title.innerText = title }
+  get title() {
+    return this.#title.innerText;
+  }
+  set title(title) {
+    this.#title.innerText = title;
+  }
 
-	toJSON(): IToDo {
-		return {
-			description: this.description,
-			dueDate: this.dueDate,
-			dueTime: this.dueTime,
-			done: this.done,
-			title: this.title
-		}
-	}
+  toJSON(): IToDo {
+    return {
+      description: this.description,
+      dueDate: this.dueDate,
+      dueTime: this.dueTime,
+      done: this.done,
+      title: this.title
+    };
+  }
 }
-window.customElements.define("to-do", ToDo)
+window.customElements.define('to-do', ToDo);
