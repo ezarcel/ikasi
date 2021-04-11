@@ -45,30 +45,20 @@ ipcRenderer.on('go-home', async () => {
   }
 });
 
-const localStorageID = new URL(location.href).searchParams.get(
-  'localStorageID'
-);
+const localStorageID = new URL(location.href).searchParams.get('localStorageID');
 let data: ToDoData = { todos: [] };
 let intervalID: number;
 
 const titlebar = new Titlebar({
-  backgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#000000')
-    : Color.fromHex('#ffffff'),
-  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#333333')
-    : Color.fromHex('#cccccc'),
+  backgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#000000') : Color.fromHex('#ffffff'),
+  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#333333') : Color.fromHex('#cccccc'),
   icon: '../img/logo_without_text.png',
   shadow: false
 });
 ipcRenderer.on('colors-changed', () => {
   const darkMode = remote.nativeTheme.shouldUseDarkColors;
-  titlebar.updateBackground(
-    darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff')
-  );
-  titlebar.updateItemBGColor(
-    darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd')
-  );
+  titlebar.updateBackground(darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff'));
+  titlebar.updateItemBGColor(darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd'));
 });
 titlebar.updateMenu(
   remote.Menu.buildFromTemplate([
@@ -96,9 +86,7 @@ titlebar.updateMenu(
 );
 function updateTitle() {
   const url = new URL(location.href);
-  document.title = `${p.basename(
-    url.searchParams.get('path') || '[{(untitled)}]'
-  )} - [{(product-name)}] To-do`;
+  document.title = `${p.basename(url.searchParams.get('path') || '[{(untitled)}]')} - [{(product-name)}] To-do`;
   titlebar.updateTitle();
 }
 
@@ -110,18 +98,15 @@ async function save() {
   await addRecentsEntry({ filename: path, timestamp: Date.now() });
 }
 async function saveAs() {
-  const { canceled, filePath } = await remote.dialog.showSaveDialog(
-    remote.getCurrentWindow(),
-    {
-      defaultPath: '[{(untitled)}].itl',
-      filters: [
-        {
-          name: 'ikasi To-do List',
-          extensions: ['itl']
-        }
-      ]
-    }
-  );
+  const { canceled, filePath } = await remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+    defaultPath: '[{(untitled)}].itl',
+    filters: [
+      {
+        name: 'ikasi To-do List',
+        extensions: ['itl']
+      }
+    ]
+  });
   if (canceled) return;
 
   const url = new URL(location.href);
@@ -152,9 +137,7 @@ function addListeners(toDo: ToDo) {
   toDo.addEventListener('edited', () => {
     setTimeout(() => {
       sortToDos();
-      data.todos = ([...document.querySelectorAll('to-do')] as ToDo[]).map(e =>
-        e.toJSON()
-      );
+      data.todos = ([...document.querySelectorAll('to-do')] as ToDo[]).map(e => e.toJSON());
     }, 0);
   });
   toDo.addEventListener('delete', async () => {
@@ -175,8 +158,7 @@ function addListeners(toDo: ToDo) {
 }
 
 window.addEventListener('load', () => {
-  if (localStorage.getItem(localStorageID) !== null)
-    data = JSON.parse(localStorage.getItem(localStorageID));
+  if (localStorage.getItem(localStorageID) !== null) data = JSON.parse(localStorage.getItem(localStorageID));
 
   updateTitle();
 

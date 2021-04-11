@@ -11,23 +11,15 @@ const { addRecentsEntry } = require('./js/tools') as typeof import('./tools');
 ipcRenderer.on('close', () => remote.getCurrentWindow().destroy());
 
 const titlebar = new Titlebar({
-  backgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#000000')
-    : Color.fromHex('#ffffff'),
-  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#333333')
-    : Color.fromHex('#cccccc'),
+  backgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#000000') : Color.fromHex('#ffffff'),
+  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#333333') : Color.fromHex('#cccccc'),
   icon: '../img/logo_without_text.png',
   shadow: false
 });
 ipcRenderer.on('colors-changed', () => {
   const darkMode = remote.nativeTheme.shouldUseDarkColors;
-  titlebar.updateBackground(
-    darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff')
-  );
-  titlebar.updateItemBGColor(
-    darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd')
-  );
+  titlebar.updateBackground(darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff'));
+  titlebar.updateItemBGColor(darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd'));
 });
 titlebar.updateMenu(remote.Menu.buildFromTemplate([]));
 
@@ -68,11 +60,7 @@ async function openFile(path: string): Promise<void> {
 }
 
 window.addEventListener('load', async () => {
-  if (
-    !existsSync('./recents.json') ||
-    (await readFile('./recents.json', 'utf8')) === ''
-  )
-    writeJSON('./recents.json', []);
+  if (!existsSync('./recents.json') || (await readFile('./recents.json', 'utf8')) === '') writeJSON('./recents.json', []);
 
   const fileListE = document.querySelector('#file-list') as HTMLDivElement;
   const recents = (await readJSON('./recents.json')) as RecentsEntry[];
@@ -92,14 +80,10 @@ window.addEventListener('load', async () => {
   recents.forEach(({ filename, timestamp }) => {
     fileListE.innerHTML += `
 			<div class="file" title="${filename}">
-				<img src="../img/icons/${
-          fileIcons[p.extname(filename)] || 'unknown'
-        }_file.png" alt="file icon">
+				<img src="../img/icons/${fileIcons[p.extname(filename)] || 'unknown'}_file.png" alt="file icon">
 				<div class="info">
 					<span class="name">${p.parse(filename).base}</span>
-					<span class="description">${moment(timestamp)
-            .locale(navigator.language)
-            .fromNow()} | ${
+					<span class="description">${moment(timestamp).locale(navigator.language).fromNow()} | ${
       fileTypes[p.extname(filename)] || '[{(unknown)}]'
     }</span>
 				</div>
@@ -107,9 +91,7 @@ window.addEventListener('load', async () => {
   });
 
   fileListE.addEventListener('click', e => {
-    const file = (e.composedPath() as HTMLElement[]).find(e =>
-      e?.classList?.contains('file')
-    );
+    const file = (e.composedPath() as HTMLElement[]).find(e => e?.classList?.contains('file'));
     if (!file) return;
     openFile(file.getAttribute('title'));
   });
@@ -137,25 +119,19 @@ window.addEventListener('load', async () => {
     });
     if (!canceled) openFile(filePaths[0]);
   });
-  document
-    .querySelector('.option.new.new-mind-map')
-    .addEventListener('click', () => {
-      const id = v4();
-      localStorage.setItem(id, JSON.stringify({}));
-      location.href = `./mind-map-editor.html?localStorageID=${id}`;
-    });
-  document
-    .querySelector('.option.new.new-deck-of-cards')
-    .addEventListener('click', () => {
-      const id = v4();
-      localStorage.setItem(id, JSON.stringify({ cards: [] } as DOCData));
-      location.href = `./deck-of-cards-editor.html?localStorageID=${id}`;
-    });
-  document
-    .querySelector('.option.new.new-to-do-list')
-    .addEventListener('click', () => {
-      const id = v4();
-      localStorage.setItem(id, JSON.stringify({ todos: [] } as ToDoData));
-      location.href = `./to-do-list-editor.html?localStorageID=${id}`;
-    });
+  document.querySelector('.option.new.new-mind-map').addEventListener('click', () => {
+    const id = v4();
+    localStorage.setItem(id, JSON.stringify({}));
+    location.href = `./mind-map-editor.html?localStorageID=${id}`;
+  });
+  document.querySelector('.option.new.new-deck-of-cards').addEventListener('click', () => {
+    const id = v4();
+    localStorage.setItem(id, JSON.stringify({ cards: [] } as DOCData));
+    location.href = `./deck-of-cards-editor.html?localStorageID=${id}`;
+  });
+  document.querySelector('.option.new.new-to-do-list').addEventListener('click', () => {
+    const id = v4();
+    localStorage.setItem(id, JSON.stringify({ todos: [] } as ToDoData));
+    location.href = `./to-do-list-editor.html?localStorageID=${id}`;
+  });
 });

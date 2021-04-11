@@ -14,20 +14,13 @@ app.whenReady().then(async () => {
   ensureDirSync(SRC_DIR);
 
   protocol.interceptBufferProtocol('file', async (req, respond) => {
-    const url = decodeURIComponent(
-      new URL(req.url).pathname.slice(os.platform() === 'win32' ? 1 : 0)
-    );
+    const url = decodeURIComponent(new URL(req.url).pathname.slice(os.platform() === 'win32' ? 1 : 0));
     const data = await readFile(url);
 
     respond({
       data: ['.html', '.css', '.js'].includes(p.extname(url))
         ? Buffer.from(
-            await translateString(
-              data.toString(),
-              app.getLocale() in (await importTranslations())
-                ? app.getLocale()
-                : 'en'
-            )
+            await translateString(data.toString(), app.getLocale() in (await importTranslations()) ? app.getLocale() : 'en')
           )
         : data,
       mimeType: mime.lookup(url) as any

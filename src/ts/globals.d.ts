@@ -1,4 +1,13 @@
 declare global {
+  interface ParentNode {
+    querySelector(selector: 'map-bubble'): Bubble;
+    querySelectorAll(selectors: 'map-bubble'): NodeListOf<Bubble>;
+  }
+  interface ikasiImage {
+    base64Image: string;
+    format: MindMapImageFormat;
+  }
+
   interface RecentsEntry {
     filename: string;
     timestamp: number;
@@ -45,6 +54,7 @@ declare global {
   interface ICard {
     backgroundColor: string;
     content: string;
+    image: ikasiImage;
     subtitle: string;
     title: string;
   }

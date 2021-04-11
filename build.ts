@@ -1,7 +1,7 @@
 // FOR NPM SCRIPTS USE ONLY
 
 import ePackager from 'electron-packager';
-import { emptyDir, ensureDir, rmdir, unlink } from 'fs-extra';
+import { emptyDir, ensureDir, unlink } from 'fs-extra';
 import p from 'path';
 
 const eWInstaller = require('electron-winstaller') as typeof import('electron-winstaller');

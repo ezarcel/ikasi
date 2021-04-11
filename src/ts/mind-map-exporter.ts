@@ -1,17 +1,8 @@
 var data: MindMapData = JSON.parse(localStorage.getItem('screenshot'));
 
-function calcJoints(
-  e1: HTMLElement,
-  e2: HTMLElement
-): { width: number; height: number; innerHTML: string } {
-  const [x1, y1] = [
-    e1.offsetWidth / 2 + e1.offsetLeft,
-    e1.offsetHeight / 2 + e1.offsetTop
-  ];
-  const [x2, y2] = [
-    e2.offsetWidth / 2 + e2.offsetLeft,
-    e2.offsetHeight / 2 + e2.offsetTop
-  ];
+function calcJoints(e1: HTMLElement, e2: HTMLElement): { width: number; height: number; innerHTML: string } {
+  const [x1, y1] = [e1.offsetWidth / 2 + e1.offsetLeft, e1.offsetHeight / 2 + e1.offsetTop];
+  const [x2, y2] = [e2.offsetWidth / 2 + e2.offsetLeft, e2.offsetHeight / 2 + e2.offsetTop];
   return {
     height: Math.max(y1, y2) + data.settings.lineWidth,
     width: Math.max(x1, x2) + data.settings.lineWidth,

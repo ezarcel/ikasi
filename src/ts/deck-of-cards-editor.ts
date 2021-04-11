@@ -1,6 +1,6 @@
 import { Titlebar, Color } from 'custom-electron-titlebar';
 import { ipcRenderer, remote } from 'electron';
-import { writeJSON } from 'fs-extra';
+import { readFile, writeJSON } from 'fs-extra';
 import p from 'path';
 import Swal from 'sweetalert2';
 
@@ -45,30 +45,20 @@ ipcRenderer.on('go-home', async () => {
   }
 });
 
-const localStorageID = new URL(location.href).searchParams.get(
-  'localStorageID'
-);
+const localStorageID = new URL(location.href).searchParams.get('localStorageID');
 let data: DOCData = { cards: [] };
 let intervalID: number;
 
 const titlebar = new Titlebar({
-  backgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#000000')
-    : Color.fromHex('#ffffff'),
-  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#333333')
-    : Color.fromHex('#cccccc'),
+  backgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#000000') : Color.fromHex('#ffffff'),
+  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#333333') : Color.fromHex('#cccccc'),
   icon: '../img/logo_without_text.png',
   shadow: false
 });
 ipcRenderer.on('colors-changed', () => {
   const darkMode = remote.nativeTheme.shouldUseDarkColors;
-  titlebar.updateBackground(
-    darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff')
-  );
-  titlebar.updateItemBGColor(
-    darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd')
-  );
+  titlebar.updateBackground(darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff'));
+  titlebar.updateItemBGColor(darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd'));
 });
 titlebar.updateMenu(
   remote.Menu.buildFromTemplate([
@@ -96,9 +86,7 @@ titlebar.updateMenu(
 );
 function updateTitle() {
   const url = new URL(location.href);
-  document.title = `${p.basename(
-    url.searchParams.get('path') || '[{(untitled)}]'
-  )} - [{(product-name)}] Deck of cards`;
+  document.title = `${p.basename(url.searchParams.get('path') || '[{(untitled)}]')} - [{(product-name)}] Deck of cards`;
   titlebar.updateTitle();
 }
 
@@ -110,18 +98,15 @@ async function save() {
   await addRecentsEntry({ filename: path, timestamp: Date.now() });
 }
 async function saveAs() {
-  const { canceled, filePath } = await remote.dialog.showSaveDialog(
-    remote.getCurrentWindow(),
-    {
-      defaultPath: '[{(untitled)}].idoc',
-      filters: [
-        {
-          name: 'ikasi Deck Of Cards',
-          extensions: ['idoc']
-        }
-      ]
-    }
-  );
+  const { canceled, filePath } = await remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+    defaultPath: '[{(untitled)}].idoc',
+    filters: [
+      {
+        name: 'ikasi Deck Of Cards',
+        extensions: ['idoc']
+      }
+    ]
+  });
   if (canceled) return;
 
   const url = new URL(location.href);
@@ -146,9 +131,7 @@ function newCard() {
 function updatePageIndicator() {
   const pageIndicator = document.querySelector('#page-indicator');
   const cards = [...document.querySelectorAll('.card-container')];
-  pageIndicator.textContent = `${cards.indexOf(getVisibleCard()) + 1} / ${
-    cards.length
-  }`;
+  pageIndicator.textContent = `${cards.indexOf(getVisibleCard()) + 1} / ${cards.length}`;
 }
 function getVisibleCard() {
   const cards = [...document.querySelectorAll('.card-container')] as Card[];
@@ -157,6 +140,21 @@ function getVisibleCard() {
   return cards[diffs.indexOf(minimum)];
 }
 function addListeners(card: Card) {
+  card.addEventListener('add-image', async () => {
+    const { canceled, filePaths } = await remote.dialog.showOpenDialog({
+      filters: [
+        {
+          name: '[{(file-format.images)}]',
+          extensions: ['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif']
+        }
+      ]
+    });
+    if (!canceled)
+      card.image = {
+        base64Image: await readFile(filePaths[0], 'base64'),
+        format: p.extname(filePaths[0]).slice(1) as MindMapImageFormat
+      };
+  });
   card.addEventListener('delete-card', async () => {
     if (
       (
@@ -177,14 +175,13 @@ function addListeners(card: Card) {
 }
 
 window.addEventListener('load', () => {
-  if (localStorage.getItem(localStorageID) !== null)
-    data = JSON.parse(localStorage.getItem(localStorageID));
+  if (localStorage.getItem(localStorageID) !== null) data = JSON.parse(localStorage.getItem(localStorageID));
 
   updateTitle();
 
   if (data.cards.length === 0) newCard();
   else
-    data.cards.forEach(({ backgroundColor, content, subtitle, title }) => {
+    data.cards.forEach(({ backgroundColor, content, image, subtitle, title }) => {
       const cardContainer = document.createElement('div');
       document.querySelector('#container').appendChild(cardContainer);
       cardContainer.classList.add('card-container');
@@ -194,6 +191,7 @@ window.addEventListener('load', () => {
       card.addEventListener('ready', () => {
         card.backgroundColor = backgroundColor;
         card.content = content;
+        card.image = image;
         card.subtitle = subtitle;
         card.title = title;
       });
@@ -202,9 +200,7 @@ window.addEventListener('load', () => {
       updatePageIndicator();
     });
 
-  document
-    .querySelector('#container')
-    .addEventListener('scroll', updatePageIndicator);
+  document.querySelector('#container').addEventListener('scroll', updatePageIndicator);
 
   document.querySelector('#page-left').addEventListener('click', () => {
     getVisibleCard()?.previousElementSibling?.scrollIntoView?.();
@@ -220,9 +216,7 @@ window.addEventListener('load', () => {
   intervalID = window.setInterval(() => {
     data = {
       ...data,
-      cards: ([...document.querySelectorAll('i-card')] as Card[]).map(e =>
-        e.toJSON()
-      )
+      cards: ([...document.querySelectorAll('i-card')] as Card[]).map(e => e.toJSON())
     };
     localStorage.setItem(localStorageID, JSON.stringify(data));
   }, 10);

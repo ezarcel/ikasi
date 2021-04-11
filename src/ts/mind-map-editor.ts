@@ -45,9 +45,7 @@ ipcRenderer.on('go-home', async () => {
   }
 });
 
-const localStorageID = new URL(location.href).searchParams.get(
-  'localStorageID'
-);
+const localStorageID = new URL(location.href).searchParams.get('localStorageID');
 var data: MindMapData = {
   bubbles: [],
   links: [],
@@ -69,23 +67,15 @@ var data: MindMapData = {
 let intervalID: number;
 
 const titlebar = new Titlebar({
-  backgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#000000')
-    : Color.fromHex('#ffffff'),
-  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors
-    ? Color.fromHex('#333333')
-    : Color.fromHex('#cccccc'),
+  backgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#000000') : Color.fromHex('#ffffff'),
+  itemBackgroundColor: remote.nativeTheme.shouldUseDarkColors ? Color.fromHex('#333333') : Color.fromHex('#cccccc'),
   icon: '../img/logo_without_text.png',
   shadow: false
 });
 ipcRenderer.on('colors-changed', () => {
   const darkMode = remote.nativeTheme.shouldUseDarkColors;
-  titlebar.updateBackground(
-    darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff')
-  );
-  titlebar.updateItemBGColor(
-    darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd')
-  );
+  titlebar.updateBackground(darkMode ? Color.fromHex('#000000') : Color.fromHex('#ffffff'));
+  titlebar.updateItemBGColor(darkMode ? Color.fromHex('#222222') : Color.fromHex('#dddddd'));
 });
 titlebar.updateMenu(
   remote.Menu.buildFromTemplate([
@@ -134,9 +124,7 @@ titlebar.updateMenu(
 );
 function updateTitle() {
   const url = new URL(location.href);
-  document.title = `${p.basename(
-    url.searchParams.get('path') || '[{(untitled)}]'
-  )} - [{(product-name)}] Mind Map`;
+  document.title = `${p.basename(url.searchParams.get('path') || '[{(untitled)}]')} - [{(product-name)}] Mind Map`;
   titlebar.updateTitle();
 }
 
@@ -148,18 +136,15 @@ async function save() {
   await addRecentsEntry({ filename: path, timestamp: Date.now() });
 }
 async function saveAs() {
-  const { canceled, filePath } = await remote.dialog.showSaveDialog(
-    remote.getCurrentWindow(),
-    {
-      defaultPath: '[{(untitled)}].imm',
-      filters: [
-        {
-          name: 'ikasi Mind Map',
-          extensions: ['imm']
-        }
-      ]
-    }
-  );
+  const { canceled, filePath } = await remote.dialog.showSaveDialog(remote.getCurrentWindow(), {
+    defaultPath: '[{(untitled)}].imm',
+    filters: [
+      {
+        name: 'ikasi Mind Map',
+        extensions: ['imm']
+      }
+    ]
+  });
   if (canceled) return;
 
   const url = new URL(location.href);
@@ -174,36 +159,21 @@ async function exportAs(format: MindMapExportingFormat) {
   const allBubbles = [...document.querySelectorAll('map-bubble')] as Bubble[];
   clip.x = Math.min(...allBubbles.map(b => b.x));
   clip.y = Math.min(...allBubbles.map(b => b.y));
-  clip.width =
-    Math.max(...allBubbles.map(b => b.width + b.x)) -
-    clip.x +
-    data.settings.exportingMargin * 2;
-  clip.height =
-    Math.max(...allBubbles.map(b => b.height + b.y)) -
-    clip.y +
-    data.settings.exportingMargin * 2;
+  clip.width = Math.max(...allBubbles.map(b => b.width + b.x)) - clip.x + data.settings.exportingMargin * 2;
+  clip.height = Math.max(...allBubbles.map(b => b.height + b.y)) - clip.y + data.settings.exportingMargin * 2;
 
   const browser = await puppeteer.launch({
     headless: true,
     defaultViewport: { width: 1920, height: 1080, deviceScaleFactor: 1.5 },
     dumpio: true,
-    args: [
-      '--disable-web-security',
-      '--disable-features=IsolateOrigins',
-      '--disable-site-isolation-trials'
-    ]
+    args: ['--disable-web-security', '--disable-features=IsolateOrigins', '--disable-site-isolation-trials']
   });
   const page = await browser.newPage();
   await page.goto(
-    location.pathname.slice(
-      navigator.platform === 'Win32' ? 1 : 0,
-      location.pathname.lastIndexOf('/')
-    ) + '/mind-map-exporter.html'
+    location.pathname.slice(navigator.platform === 'Win32' ? 1 : 0, location.pathname.lastIndexOf('/')) +
+      '/mind-map-exporter.html'
   );
-  await page.evaluate(
-    mm => localStorage.setItem('screenshot', mm),
-    JSON.stringify(data)
-  );
+  await page.evaluate(mm => localStorage.setItem('screenshot', mm), JSON.stringify(data));
   await page.reload();
   await page.waitForSelector('.finish-element');
 
@@ -219,22 +189,15 @@ async function exportAs(format: MindMapExportingFormat) {
   await browser.close();
 
   const a = document.createElement('a');
-  a.download = `${p.basename(
-    p.basename(
-      new URL(location.href).searchParams.get('path') || '[{(untitled)}]'
-    )
-  )}.${format}`;
-  if (format === 'pdf')
-    a.href = `data:application/pdf;base64,${out.toString('base64')}`;
+  a.download = `${p.basename(p.basename(new URL(location.href).searchParams.get('path') || '[{(untitled)}]'))}.${format}`;
+  if (format === 'pdf') a.href = `data:application/pdf;base64,${out.toString('base64')}`;
   else a.href = `data:image/${format};base64,${out}`;
   a.click();
 }
 async function settings() {
-  const $i = (selector: string) =>
-    document.querySelector('#settings-inner ' + selector) as HTMLInputElement;
+  const $i = (selector: string) => document.querySelector('#settings-inner ' + selector) as HTMLInputElement;
 
-  const $s = (selector: string) =>
-    document.querySelector('#settings-inner ' + selector) as HTMLSpanElement;
+  const $s = (selector: string) => document.querySelector('#settings-inner ' + selector) as HTMLSpanElement;
 
   const { isConfirmed, value } = await Swal.fire({
     html: `
@@ -334,39 +297,27 @@ async function settings() {
       $i('#background .color input').value = data.settings.backgroundColor;
       $i('#border .color input').value = data.settings.borderColor;
 
-      $s(
-        '#border .width span.range-value'
-      ).textContent = `${data.settings.borderWidth}px`;
+      $s('#border .width span.range-value').textContent = `${data.settings.borderWidth}px`;
       $i('#border .width input').valueAsNumber = data.settings.borderWidth;
 
-      $s(
-        '#exporting .margin span.range-value'
-      ).textContent = `${data.settings.exportingMargin}px`;
-      $i('#exporting .margin input').valueAsNumber =
-        data.settings.exportingMargin;
+      $s('#exporting .margin span.range-value').textContent = `${data.settings.exportingMargin}px`;
+      $i('#exporting .margin input').valueAsNumber = data.settings.exportingMargin;
 
       $i('#bubble .color input').value = data.settings.bubbleColor;
 
-      $s(
-        '#bubble .padding-size span.range-value'
-      ).textContent = `${data.settings.bubblePaddingSize}px`;
-      $i('#bubble .padding-size input').valueAsNumber =
-        data.settings.bubblePaddingSize;
+      $s('#bubble .padding-size span.range-value').textContent = `${data.settings.bubblePaddingSize}px`;
+      $i('#bubble .padding-size input').valueAsNumber = data.settings.bubblePaddingSize;
 
       $i('#font-and-text .color input').value = data.settings.fontColor;
 
       $i('#font-and-text .family input').value = data.settings.fontFamily;
 
-      $s(
-        '#font-and-text .size span.range-value'
-      ).textContent = `${data.settings.fontSize}px`;
+      $s('#font-and-text .size span.range-value').textContent = `${data.settings.fontSize}px`;
       $i('#font-and-text .size input').valueAsNumber = data.settings.fontSize;
 
       $i('#line .color input').value = data.settings.lineColor;
 
-      $s(
-        '#line .width span.range-value'
-      ).textContent = `${data.settings.lineWidth}px`;
+      $s('#line .width span.range-value').textContent = `${data.settings.lineWidth}px`;
       $i('#line .width input').valueAsNumber = data.settings.lineWidth;
     }
   });
@@ -376,18 +327,9 @@ async function settings() {
   }
 }
 
-function calcJoints(
-  e1: HTMLElement,
-  e2: HTMLElement
-): { width: number; height: number; innerHTML: string } {
-  const [x1, y1] = [
-    e1.offsetWidth / 2 + e1.offsetLeft,
-    e1.offsetHeight / 2 + e1.offsetTop
-  ];
-  const [x2, y2] = [
-    e2.offsetWidth / 2 + e2.offsetLeft,
-    e2.offsetHeight / 2 + e2.offsetTop
-  ];
+function calcJoints(e1: HTMLElement, e2: HTMLElement): { width: number; height: number; innerHTML: string } {
+  const [x1, y1] = [e1.offsetWidth / 2 + e1.offsetLeft, e1.offsetHeight / 2 + e1.offsetTop];
+  const [x2, y2] = [e2.offsetWidth / 2 + e2.offsetLeft, e2.offsetHeight / 2 + e2.offsetTop];
   return {
     height: Math.max(y1, y2) + data.settings.lineWidth,
     width: Math.max(x1, x2) + data.settings.lineWidth,
@@ -414,12 +356,7 @@ function joinAll() {
     if (data.links.length === i) break;
     const link = data.links[i];
     const l = lines[i] as SVGElement;
-    const joints = calcJoints(
-      ...(link.map(e => document.getElementById(e)) as [
-        HTMLElement,
-        HTMLElement
-      ])
-    );
+    const joints = calcJoints(...(link.map(e => document.getElementById(e)) as [HTMLElement, HTMLElement]));
     l.style.width = `${joints.width}px`;
     l.style.height = `${joints.height}px`;
     l.innerHTML = joints.innerHTML;
@@ -428,8 +365,7 @@ function joinAll() {
     l.setAttribute('i', i.toString());
   }
   if (lines.length === data.links.length) return;
-  else if (lines.length < data.links.length)
-    for (i = i; i < data.links.length; i++) joinNew(...data.links[i], i);
+  else if (lines.length < data.links.length) for (i = i; i < data.links.length; i++) joinNew(...data.links[i], i);
   else for (i = i; i < lines.length; i++) lines[i].remove();
 }
 function rejoinAll() {
@@ -437,27 +373,16 @@ function rejoinAll() {
   joinAll();
 }
 function rejoinMe(id: string) {
-  let indexes = data.links
-    .map((e, i) => (e.includes(id) ? i : -1))
-    .filter(e => e !== -1);
-  document
-    .querySelectorAll(
-      `svg.joining-line[from="${id}"], svg.joining-line[to="${id}"]`
-    )
-    .forEach((l: HTMLElement) => {
-      const i = parseInt(l.getAttribute('i'));
-      const link = data.links[i];
-      const joints = calcJoints(
-        ...(link.map(e => document.getElementById(e)) as [
-          HTMLElement,
-          HTMLElement
-        ])
-      );
-      l.innerHTML = joints.innerHTML;
-      l.style.height = `${joints.height}px`;
-      l.style.width = `${joints.width}px`;
-      indexes = indexes.filter(e => e !== i);
-    });
+  let indexes = data.links.map((e, i) => (e.includes(id) ? i : -1)).filter(e => e !== -1);
+  document.querySelectorAll(`svg.joining-line[from="${id}"], svg.joining-line[to="${id}"]`).forEach((l: HTMLElement) => {
+    const i = parseInt(l.getAttribute('i'));
+    const link = data.links[i];
+    const joints = calcJoints(...(link.map(e => document.getElementById(e)) as [HTMLElement, HTMLElement]));
+    l.innerHTML = joints.innerHTML;
+    l.style.height = `${joints.height}px`;
+    l.style.width = `${joints.width}px`;
+    indexes = indexes.filter(e => e !== i);
+  });
   indexes.forEach(i => joinNew(...data.links[i], i));
 }
 function newBubble({ clientX: mouseX, clientY: mouseY }: MouseEvent) {
@@ -542,9 +467,7 @@ function addListeners(bubble: Bubble) {
   });
   bubble.addEventListener('update-data', () => {
     if (data.bubbles.some(b => bubble.id === b.id))
-      data.bubbles = data.bubbles.map(b =>
-        bubble.id === b.id ? bubble.toJSON() : b
-      );
+      data.bubbles = data.bubbles.map(b => (bubble.id === b.id ? bubble.toJSON() : b));
     else data.bubbles.push(bubble.toJSON());
   });
 }
@@ -555,10 +478,7 @@ function updateStyling() {
 }
 const updateBubble = (bubble: Bubble) => bubble.update(data.settings as any);
 
-const updateAllBubbles = () =>
-  ([...document.querySelectorAll('map-bubble')] as Bubble[]).forEach(
-    updateBubble
-  );
+const updateAllBubbles = () => ([...document.querySelectorAll('map-bubble')] as Bubble[]).forEach(updateBubble);
 
 window.addEventListener('load', () => {
   updateTitle();
@@ -570,13 +490,8 @@ window.addEventListener('load', () => {
   });
   updateStyling();
 
-  intervalID = window.setInterval(
-    () => localStorage.setItem(localStorageID, JSON.stringify(data)),
-    50
-  );
+  intervalID = window.setInterval(() => localStorage.setItem(localStorageID, JSON.stringify(data)), 50);
 });
 window.addEventListener('dblclick', (e: MouseEvent) =>
-  !e.composedPath().some(f => (f as Element).nodeName === 'MAP-BUBBLE')
-    ? newBubble(e)
-    : null
+  !e.composedPath().some(f => (f as Element).nodeName === 'MAP-BUBBLE') ? newBubble(e) : null
 );

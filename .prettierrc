@@ -1,7 +1,9 @@
 {
   "arrowParens": "avoid",
   "bracketSpacing": true,
+  "endOfLine": "lf",
   "jsxSingleQuote": true,
+  "printWidth": 125,
   "quoteProps": "as-needed",
   "singleQuote": true,
   "tabWidth": 2,

@@ -1,3 +1,5 @@
+window.require;
+
 class Bubble extends HTMLElement {
   #bound_onClick = this.onClick.bind(this);
   #bound_onKeyDown = this.onKeyDown.bind(this);
@@ -27,9 +29,9 @@ class Bubble extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' }).innerHTML = `
-			<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
+		  <link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 			<style>
-				* {
+			  * {
 					outline: none;
 					user-select: none;
 					box-sizing: border-box;
@@ -133,61 +135,31 @@ class Bubble extends HTMLElement {
 						<i title="[{(add-image)}]" class="far fa-image fa-fw"></i>
 					</div>
 				</div>
-				<div class="resizer" direction="tl" id="resizer-tl"></div>
-				<div class="resizer" direction="tr" id="resizer-tr"></div>
-				<div class="resizer" direction="bl" id="resizer-bl"></div>
-				<div class="resizer" direction="br" id="resizer-br"></div>
+				<div class="resizer hide-while-not-expanded" direction="tl" id="resizer-tl"></div>
+				<div class="resizer hide-while-not-expanded" direction="tr" id="resizer-tr"></div>
+				<div class="resizer hide-while-not-expanded" direction="bl" id="resizer-bl"></div>
+				<div class="resizer hide-while-not-expanded" direction="br" id="resizer-br"></div>
 			</div>
 		`;
 
     this.#bubble = this.shadowRoot.querySelector(':scope > div#bubble');
     this.#content = this.#bubble.querySelector(':scope > span');
     this.#controls = this.#bubble.querySelector(':scope > .controls');
-    this.#addImage = this.#bubble.querySelector(
-      ':scope > .controls > .add-image'
-    );
-    this.#deleteBubble = this.#bubble.querySelector(
-      ':scope > .controls > .delete-bubble'
-    );
+    this.#addImage = this.#bubble.querySelector(':scope > .controls > .add-image');
+    this.#deleteBubble = this.#bubble.querySelector(':scope > .controls > .delete-bubble');
     this.#img = this.#bubble.querySelector(':scope > img');
-    this.#newChildBubble = this.#bubble.querySelector(
-      ':scope > .controls > .new-child-bubble'
-    );
-    this.#resizers = [
-      ...this.#bubble.querySelectorAll(':scope > .resizer')
-    ] as HTMLDivElement[];
+    this.#newChildBubble = this.#bubble.querySelector(':scope > .controls > .new-child-bubble');
+    this.#resizers = [...this.#bubble.querySelectorAll(':scope > .resizer')] as HTMLDivElement[];
 
     window.addEventListener('click', this.#bound_onClick);
     this.addEventListener('dblclick', this.onDblClick);
-    this.#addImage.addEventListener('click', () =>
-      this.dispatchEvent(new CustomEvent('add-image'))
-    );
-    this.#deleteBubble.addEventListener('click', () =>
-      this.dispatchEvent(new CustomEvent('delete'))
-    );
-    this.#img.addEventListener('click', () =>
-      this.dispatchEvent(new CustomEvent('remove-image'))
-    );
-    this.#newChildBubble.addEventListener('click', this.newChild.bind(this));
+    this.#addImage.addEventListener('click', () => this.dispatchEvent(new CustomEvent('add-image')));
+    this.#deleteBubble.addEventListener('click', () => this.dispatchEvent(new CustomEvent('delete')));
+    this.#img.addEventListener('click', () => this.dispatchEvent(new CustomEvent('remove-image')));
+    this.#newChildBubble.addEventListener('click', () => this.dispatchEvent(new CustomEvent('new-child')));
 
     this.#intervalID = window.setInterval(() => {
       if (this.#status === 'expanded') this.relocate();
-      const minHeight =
-        [...this.#bubble.children]
-          .map(e =>
-            ['static', 'relative'].includes(getComputedStyle(e).position)
-              ? e.getBoundingClientRect().height +
-                parseFloat(getComputedStyle(e).marginTop.slice(0, -2)) +
-                parseFloat(getComputedStyle(e).marginBottom.slice(0, -2))
-              : 0
-          )
-          .reduce((acc, e) => acc + e, 0) +
-        (this.#settings?.borderWidth || 0) * 2 +
-        (this.#settings?.bubblePaddingSize || 0) * 2;
-      if (!this.style?.minHeight.startsWith(minHeight.toString())) {
-        this.style.minHeight = `${minHeight}px`;
-        this.dispatchEvent(new CustomEvent('rejoin-me'));
-      }
     }, 0);
   }
   connectedCallback() {
@@ -200,9 +172,7 @@ class Bubble extends HTMLElement {
   }
 
   onClick(e: MouseEvent) {
-    this.status = e.composedPath().includes(this.#bubble)
-      ? 'expanded'
-      : 'normal';
+    this.status = e.composedPath().includes(this.#bubble) ? 'expanded' : 'normal';
   }
   onDblClick(e: MouseEvent) {
     e.preventDefault();
@@ -212,7 +182,7 @@ class Bubble extends HTMLElement {
     this.relocate();
     if (this.status === 'expanded' && e.key === 'Enter' && e.ctrlKey) {
       e.preventDefault();
-      this.newChild();
+      this.dispatchEvent(new CustomEvent('new-child'));
     } else this.dispatchEvent(new CustomEvent('rejoin-me'));
   }
   onKey() {
@@ -231,16 +201,10 @@ class Bubble extends HTMLElement {
     this.#oldX = e.clientX;
     this.#oldY = e.clientY;
 
-    const resizer = e
-      .composedPath()
-      .find((e: HTMLDivElement) =>
-        this.#resizers.includes(e)
-      ) as HTMLDivElement;
+    const resizer = e.composedPath().find((e: HTMLDivElement) => this.#resizers.includes(e)) as HTMLDivElement;
     if (resizer) {
       this.#dragMode = 'resize';
-      this.#resizeDirection = resizer.getAttribute(
-        'direction'
-      ) as BubbleResizeDirection;
+      this.#resizeDirection = resizer.getAttribute('direction') as BubbleResizeDirection;
     } else this.#dragMode = 'move';
   }
   onMouseMove(e: MouseEvent) {
@@ -250,14 +214,8 @@ class Bubble extends HTMLElement {
       let diffY = e.clientY - this.#oldY;
 
       if (this.#dragMode === 'resize') {
-        diffX *=
-          this.#resizeDirection === 'tl' || this.#resizeDirection === 'bl'
-            ? -1
-            : 1;
-        diffY *=
-          this.#resizeDirection === 'tl' || this.#resizeDirection === 'tr'
-            ? -1
-            : 1;
+        diffX *= this.#resizeDirection === 'tl' || this.#resizeDirection === 'bl' ? -1 : 1;
+        diffY *= this.#resizeDirection === 'tl' || this.#resizeDirection === 'tr' ? -1 : 1;
 
         this.width += diffX * 2;
         this.height += diffY * 2;
@@ -291,14 +249,26 @@ class Bubble extends HTMLElement {
       this.#content.focus();
     }, 0);
   }
-  newChild() {
-    this.dispatchEvent(new CustomEvent('new-child'));
+  recalculate() {
+    const minHeight =
+      [...this.#bubble.children]
+        .map(e => {
+          const style = getComputedStyle(e);
+          return style.position === 'static'
+            ? e.getBoundingClientRect().height +
+                parseFloat(style.marginTop.slice(0, -2)) +
+                parseFloat(style.marginBottom.slice(0, -2))
+            : 0;
+        })
+        .reduce((acc, e) => acc + e, 0) +
+      (this.#settings?.borderWidth || 0) * 2 +
+      (this.#settings?.bubblePaddingSize || 0) * 2;
+    this.style.minHeight = `${minHeight}px`;
+    this.dispatchEvent(new CustomEvent('rejoin-me'));
   }
   relocate() {
-    if (this.width !== this.#oldWidth)
-      this.x -= (this.width - this.#oldWidth) / 2;
-    if (this.height !== this.#oldHeight)
-      this.y -= (this.height - this.#oldHeight) / 2;
+    this.x -= (this.width - this.#oldWidth) / 2;
+    this.y -= (this.height - this.#oldHeight) / 2;
     this.#oldHeight = this.height;
     this.#oldWidth = this.width;
 
@@ -307,47 +277,27 @@ class Bubble extends HTMLElement {
   update(settings: MindMapSettings & { [key: string]: string | number }) {
     this.#settings = settings;
 
-    this.#bubble.style.setProperty(
-      '--settings-border-color',
-      settings.borderColor
-    );
-    this.#bubble.style.setProperty(
-      '--settings-border-width',
-      `${settings.borderWidth}px`
-    );
-    this.#bubble.style.setProperty(
-      '--settings-bubble-color',
-      settings.bubbleColor
-    );
-    this.#bubble.style.setProperty(
-      '--settings-bubble-padding-size',
-      `${settings.bubblePaddingSize}px`
-    );
+    this.#bubble.style.setProperty('--settings-border-color', settings.borderColor);
+    this.#bubble.style.setProperty('--settings-border-width', `${settings.borderWidth}px`);
+    this.#bubble.style.setProperty('--settings-bubble-color', settings.bubbleColor);
+    this.#bubble.style.setProperty('--settings-bubble-padding-size', `${settings.bubblePaddingSize}px`);
     this.#bubble.style.setProperty('--settings-font-color', settings.fontColor);
-    this.#bubble.style.setProperty(
-      '--settings-font-family',
-      settings.fontFamily
-    );
-    this.#bubble.style.setProperty(
-      '--settings-font-size',
-      `${settings.fontSize}px`
-    );
+    this.#bubble.style.setProperty('--settings-font-family', settings.fontFamily);
+    this.#bubble.style.setProperty('--settings-font-size', `${settings.fontSize}px`);
     this.#bubble.style.minWidth = `${
-      this.#controls.children.length * 25 +
-      (this.#controls.children.length - 1) * 5 +
-      settings.bubblePaddingSize * 2
+      this.#controls.children.length * 25 + (this.#controls.children.length - 1) * 5 + settings.bubblePaddingSize * 2
     }px`;
 
+    this.recalculate();
+
     if (window.require) {
-      const { Color } = window.require(
-        './js/tools'
-      ) as typeof import('../tools');
+      const { Color } = window.require('./js/tools') as typeof import('../tools');
       this.#controls.style.color = Color.textColor(settings.borderColor);
     }
   }
 
   get height(): number {
-    return this.offsetHeight;
+    return this.getBoundingClientRect().height;
   }
   set height(height: number) {
     this.style.height = `${height}px`;
@@ -358,15 +308,13 @@ class Bubble extends HTMLElement {
   }
   set image(image: MindMapImage | null) {
     if (image) {
-      this.#img.src = `data:image/${image.format.replace(
-        'jpg',
-        'jpeg'
-      )};base64,${image.base64Image}`;
+      this.#img.src = `data:image/${image.format.replace('jpg', 'jpeg')};base64,${image.base64Image}`;
       this.#image = image;
     } else {
       this.#img.src = '';
       this.#image = null;
     }
+    this.recalculate();
   }
 
   get status() {
@@ -376,9 +324,7 @@ class Bubble extends HTMLElement {
     if (this.#status === status) return;
     this.setAttribute('status', status);
     if (status === 'expanded') {
-      document
-        .querySelectorAll('map-bubble')
-        .forEach(e => ((e as Bubble).status = 'normal'));
+      document.querySelectorAll('map-bubble').forEach(e => (e.status = 'normal'));
       window.addEventListener('keydown', this.#bound_onKeyDown);
       this.addEventListener('keydown', this.onKey);
       this.addEventListener('keypress', this.onKey);
@@ -408,21 +354,22 @@ class Bubble extends HTMLElement {
   }
 
   get width(): number {
-    return this.offsetWidth;
+    return this.getBoundingClientRect().width;
   }
   set width(width: number) {
     this.style.width = `${width}px`;
   }
 
   get x(): number {
-    return this.offsetLeft;
+    return this.getBoundingClientRect().x;
   }
   set x(x: number) {
     this.style.left = `${x < 0 ? 0 : x}px`;
   }
 
   get y(): number {
-    return this.offsetTop;
+    const { height, top } = document.querySelector('#container').getBoundingClientRect();
+    return this.getBoundingClientRect().y - height - top;
   }
   set y(y: number) {
     this.style.top = `${y < 0 ? 0 : y}px`;

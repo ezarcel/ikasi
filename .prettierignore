@@ -2,6 +2,7 @@
 /node_modules/
 .gitignore
 .prettierignore
+LICENSE
 *.js
 *.js.map
 *.css

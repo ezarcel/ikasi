@@ -15,17 +15,11 @@ export const directoryExists = (path: string) =>
     .then(r => r.isDirectory())
     .catch(() => false);
 
-export async function filterAsync(
-  array: any[],
-  predicate: (value: any, index: number, array: any[]) => Promise<boolean>
-) {
+export async function filterAsync(array: any[], predicate: (value: any, index: number, array: any[]) => Promise<boolean>) {
   const results = await Promise.all(array.map(predicate));
   return array.filter((_, i) => results[i]);
 }
-export async function mapAsync(
-  array: any[],
-  predicate: (value: any, index: number, array: any[]) => Promise<any>
-) {
+export async function mapAsync(array: any[], predicate: (value: any, index: number, array: any[]) => Promise<any>) {
   return await Promise.all(array.map(predicate));
 }
 
@@ -53,39 +47,21 @@ export async function recursive(
   async function doIt(parent: string, deepness: number) {
     try {
       const contents = await readdir(parent);
-      if (
-        parseDirectories &&
-        ((enableDeepness && deepness < maxDeepness) || !enableDeepness)
-      )
-        (
-          await filterAsync(
-            contents,
-            async child => await directoryExists(p.join(parent, child))
-          )
-        ).forEach(dir => doIt(p.join(parent, dir), deepness + 1));
+      if (parseDirectories && ((enableDeepness && deepness < maxDeepness) || !enableDeepness))
+        (await filterAsync(contents, async child => await directoryExists(p.join(parent, child)))).forEach(dir =>
+          doIt(p.join(parent, dir), deepness + 1)
+        );
       if (parseFiles)
-        (
-          await filterAsync(
-            contents,
-            async child => await fileExists(p.join(parent, child))
-          )
-        ).forEach(file => {
+        (await filterAsync(contents, async child => await fileExists(p.join(parent, child)))).forEach(file => {
           if (!callback) return;
           const fFile = p.join(parent, file);
-          callback(
-            useRelativePath
-              ? fFile.split('/').slice(startDeepness).join('/')
-              : fFile
-          );
+          callback(useRelativePath ? fFile.split('/').slice(startDeepness).join('/') : fFile);
         });
     } catch (e) {
-      if (!hideWarnings && (e as any).code === 'EPERM')
-        console.warn(`[WARNING] Lacking permissions to read ${parent}`);
+      if (!hideWarnings && (e as any).code === 'EPERM') console.warn(`[WARNING] Lacking permissions to read ${parent}`);
     }
   }
   doIt(_startPath, 0);
 }
 
-export const appPath = app?.isPackaged
-  ? p.join(process.resourcesPath, 'app')
-  : process.cwd();
+export const appPath = app?.isPackaged ? p.join(process.resourcesPath, 'app') : process.cwd();
