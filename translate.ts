@@ -42,6 +42,6 @@ async function prettifyTranslations() {
         .sort()
         .forEach(translation => (newTranslations[language][translation] = translations[language][translation]));
     });
-  writeJSON('translations.json', newTranslations, { spaces: 4 });
+  writeJSON('translations.json', newTranslations, { spaces: 2 });
 }
 if (require?.main === module) prettifyTranslations();

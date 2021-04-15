@@ -1,6 +1,7 @@
-/node_modules/
 /build/
+/node_modules/
 /js/
 /src/css
 /src/js
+/tmp
 /recents.json

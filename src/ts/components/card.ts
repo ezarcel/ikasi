@@ -78,7 +78,6 @@ class Card extends HTMLElement {
 					height: 100%;
 				}
 				#card::after {
-					backdrop-filter: invert(1);
 					background: linear-gradient(to top right, var(--fold-color) 50%, var(--bg-shade1) 50%);
 					content: '';
 					height: ${this.#foldRatio * 100}%;
@@ -86,10 +85,13 @@ class Card extends HTMLElement {
 					right: 0;
 					top: 0;
 					width: ${this.#foldRatio * 100}%;
-					transition: background-color ${this.#animationDuration}ms;
+					transition: --fold-color ${this.#animationDuration}ms;
 				}
 				#card.animatable {
-					transition: background-color ${this.#animationDuration}ms, color ${this.#animationDuration}ms;
+					transition:
+						background-color ${this.#animationDuration}ms,
+						color ${this.#animationDuration}ms,
+						--fold-color ${this.#animationDuration}ms;
 				}
 				#card:is(:hover, :focus-within) > #bottom > #content {
 					margin-bottom: 42.5px;

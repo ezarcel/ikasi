@@ -39,6 +39,10 @@ body {
     to-do:not(:last-child) {
       margin: 0 0 2.5px 0;
     }
+
+    .day h3 {
+      margin: 30px 0 15px 0;
+    }
   }
 
   #new-to-do {

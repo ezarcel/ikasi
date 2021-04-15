@@ -1,6 +1,7 @@
 import { Titlebar, Color } from 'custom-electron-titlebar';
 import { ipcRenderer, remote } from 'electron';
 import { writeJSON } from 'fs-extra';
+import moment from 'moment';
 import p from 'path';
 import Swal from 'sweetalert2';
 
@@ -117,6 +118,9 @@ async function saveAs() {
   save();
 }
 function sortToDos() {
+  const wrapper = document.querySelector('#wrapper');
+  const paddingZeros = (x: number) => (x < 10 ? `0${x}` : x.toString());
+
   ([...document.querySelectorAll('to-do')] as ToDo[])
     .sort((a, b) => {
       const _a = a.toJSON();
@@ -131,7 +135,35 @@ function sortToDos() {
       else if (_a.description < _b.description) return -1;
       return 0;
     })
-    .forEach(e => document.querySelector('#wrapper').appendChild(e));
+    .forEach(toDo => {
+      const due = new Date(toDo.dueDate);
+      const id = `day_${due.getFullYear()}_${paddingZeros(due.getMonth() + 1)}_${paddingZeros(due.getDate())}`;
+      let element: HTMLDivElement = document.querySelector(`.day#${id}`);
+      element =
+        element ??
+        (() => {
+          const e = document.createElement('div');
+          e.id = id;
+          e.classList.add('day');
+          e.innerHTML = `<h3>${moment(due).locale(navigator.language).calendar({
+            lastDay: '[[{(yesterday)}]]',
+            lastWeek: '[[{(last-week-before)}]]dddd[[{(last-week-after)}]]',
+            nextDay: '[[{(tomorrow)}]]',
+            nextWeek: 'dddd',
+            sameDay: '[[{(today)}]]',
+            sameElse: 'D/M/YYYY'
+          })}</h3>`;
+          wrapper.appendChild(e);
+          return e;
+        })();
+      element.appendChild(toDo);
+    });
+
+  document.querySelectorAll('.day').forEach(e => {
+    if (e.children.length === 1) e.remove();
+  });
+
+  [...document.querySelectorAll('.day')].sort((a, b) => (a.id > b.id ? 1 : -1)).forEach(e => wrapper.appendChild(e));
 }
 function addListeners(toDo: ToDo) {
   toDo.addEventListener('edited', () => {
@@ -152,8 +184,11 @@ function addListeners(toDo: ToDo) {
           text: '[{(are-you-sure-you-want-to-delete-this-to-do)}]'
         })
       ).isConfirmed
-    )
+    ) {
       toDo.remove();
+      sortToDos();
+      data.todos = ([...document.querySelectorAll('to-do')] as ToDo[]).map(e => e.toJSON());
+    }
   });
 }
 
@@ -166,6 +201,10 @@ window.addEventListener('load', () => {
     const todoE = document.createElement('to-do') as ToDo;
     addListeners(todoE);
     document.querySelector('#wrapper').appendChild(todoE);
+    setTimeout(() => {
+      sortToDos();
+      data.todos = ([...document.querySelectorAll('to-do')] as ToDo[]).map(e => e.toJSON());
+    }, 0);
   });
 
   data.todos.forEach(todo => {

@@ -1,31 +1,30 @@
 // FOR NPM SCRIPTS USE ONLY
 
 import ePackager from 'electron-packager';
-import { emptyDir, ensureDir, unlink } from 'fs-extra';
-import p from 'path';
+import { emptyDir, ensureDir, removeSync, unlink } from 'fs-extra';
+import { unlinkSync } from 'node:fs';
 
 const eWInstaller = require('electron-winstaller') as typeof import('electron-winstaller');
 
 (async () => {
-  await ensureDir('./tmp');
-  await emptyDir('./tmp');
-  await ensureDir('./build');
-  await emptyDir('./build');
-
   switch (process.argv[2]) {
     case 'windows-x64': {
+      await ensureDir('./tmp');
+      await emptyDir('./tmp');
       await ePackager({
         arch: 'x64',
         dir: '.',
         icon: './img/app_icon.ico',
         ignore: path =>
-          ['/recents.json', '/tsconfig.json'].includes(path) ||
-          ['.scss', '.sass', '.ts'].includes(p.extname(path)) ||
-          path.startsWith('/node_modules/.bin') ||
-          path.startsWith('/node_modules/@types'),
+          ['/.gitignore', '/.prettierignore', '/.prettierrc.json', '/tsconfig.json'].includes(path) ||
+          ['/node_modules/.bin', '/node_modules/@types'].some(e => path.startsWith(e)) ||
+          ['.icns', '.ico', '.map', '.md', '.scss', '.ts'].some(e => path.endsWith(e)),
         out: './tmp',
         platform: 'win32'
       });
+
+      await ensureDir('./build');
+      await emptyDir('./build');
       await eWInstaller.createWindowsInstaller({
         appDirectory: './tmp/ikasi-win32-x64',
         authors: 'ezarcel',
@@ -35,33 +34,8 @@ const eWInstaller = require('electron-winstaller') as typeof import('electron-wi
         setupExe: 'ikasi-setup.exe',
         setupIcon: './img/app_icon.ico'
       });
-      break;
-    }
 
-    case 'linux-x64-flatpak': {
-      await ePackager({
-        arch: 'x64',
-        dir: '.',
-        icon: './img/app_icon.icns',
-        ignore: path =>
-          ['/recents.json', '/tsconfig.json'].includes(path) ||
-          ['.scss', '.sass', '.ts'].includes(p.extname(path)) ||
-          path.startsWith('/node_modules/.bin') ||
-          path.startsWith('/node_modules/@types'),
-        out: './tmp',
-        platform: 'linux'
-      });
-      // await eWInstaller.createWindowsInstaller({
-      // 	appDirectory: "./tmp/ikasi-win32-x64",
-      // 	authors: "ezarcel",
-      // 	description: "Open-source learning and planning toolkit",
-      // 	noMsi: true,
-      // 	outputDirectory: "./build/ikasi-win32-x64",
-      // 	setupExe: "ikasi-setup.exe",
-      // 	setupIcon: "./img/app_icon.ico",
-      // })
-      await emptyDir('./tmp');
-      await unlink('./tmp');
+      removeSync('./tmp');
       break;
     }
 

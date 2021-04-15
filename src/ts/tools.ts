@@ -56,11 +56,12 @@ export class Color {
     const { red, green, blue, alpha } =
       this.colorType(color) === 'hex' ? this.hexToRGBA(color as string) : (color as RGBAColor);
     const result: RGBAColor = {
-      red: Math.min(red + brightness, 255),
-      green: Math.min(green + brightness, 255),
-      blue: Math.min(blue + brightness, 255),
-      alpha: Math.min(alpha + brightness, 255)
+      red: Math.min(Math.max(red + brightness, 0), 255),
+      green: Math.min(Math.max(green + brightness, 0), 255),
+      blue: Math.min(Math.max(blue + brightness, 0), 255),
+      alpha: Math.min(Math.max(alpha + brightness, 0), 255)
     };
+
     return this.colorType(color) === 'hex' ? this.RGBAToHex(result) : result;
   }
 

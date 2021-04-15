@@ -1,6 +1,4 @@
-<center>
-  <img src="https://github.com/ezarcel/ikasi/raw/main/img/logo_with_text.png" alt="drawing" width="200">
-</center>
+<img src="https://github.com/ezarcel/ikasi/raw/main/img/logo_with_text.png" alt="ikasi logo" width="200">
 <br>
 
 Open-source learning and planning toolkit.
@@ -98,4 +96,10 @@ $ npm run start:dev
 ```zsh
 $ npm run compile:server-ts
 $ node ./js/translate.js
+```
+
+### Building a .exe file
+
+```zsh
+$ npm run build:windows-x64
 ```

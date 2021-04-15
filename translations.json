@@ -45,6 +45,8 @@
     "font-&-text": "Font i text",
     "go-home": "Torna a l'inici",
     "home": "Inici",
+    "last-week-after": " passat",
+    "last-week-before": "",
     "line": "Línia",
     "margin": "Marge",
     "mind-map": "Mapa mental",
@@ -68,10 +70,13 @@
     "that-file-no-longer-exists": "Aquest arxiu ja no existeix",
     "title": "Títol",
     "to-do-list": "Llista d'afers",
+    "today": "Avui",
+    "tomorrow": "Demà",
     "unknown": "Desconegut",
     "untitled": "Sense títol",
     "width": "Gruixut",
-    "yes": "Sí"
+    "yes": "Sí",
+    "yesterday": "Ahir"
   },
   "en": {
     "product-name": "ikasi",
@@ -119,6 +124,8 @@
     "font-&-text": "Font & text",
     "go-home": "Go home",
     "home": "Home",
+    "last-week-after": "",
+    "last-week-before": "Last ",
     "line": "Line",
     "margin": "Margin",
     "mind-map": "Mind map",
@@ -142,10 +149,13 @@
     "that-file-no-longer-exists": "That file no longer exists",
     "title": "Title",
     "to-do-list": "To-do list",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
     "unknown": "Unknown",
     "untitled": "Untitled",
     "width": "Width",
-    "yes": "Yes"
+    "yes": "Yes",
+    "yesterday": "Yesterday"
   },
   "es": {
     "product-name": "ikasi",
@@ -193,6 +203,8 @@
     "font-&-text": "Fuente y texto",
     "go-home": "Volver al inicio",
     "home": "Inicio",
+    "last-week-after": " pasado",
+    "last-week-before": "",
     "line": "Línea",
     "margin": "Margen",
     "mind-map": "Mapa mental",
@@ -216,9 +228,12 @@
     "that-file-no-longer-exists": "Ese archivo ya no existe",
     "title": "Título",
     "to-do-list": "Lista de tareas",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
     "unknown": "Desconocido",
     "untitled": "Sin título",
     "width": "Grosor",
-    "yes": "Sí"
+    "yes": "Sí",
+    "yesterday": "Ayer"
   }
 }

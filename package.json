@@ -5,7 +5,6 @@
   "main": "./js/app.js",
   "scripts": {
     "build:windows-x64": "npm run compile:* && node ./js/build.js windows-x64",
-    "build:linux-x64-flatpak": "npm run compile:* && node ./js/build.js linux-x64-flatpak",
     "compile:*": "npm run compile:client-ts && npm run compile:sass && npm run compile:server-ts",
     "compile:client-ts": "npx tsc -p ./src/ts/tsconfig.json",
     "compile:sass": "npx sass ./src/scss:./src/css -s compressed --update",
