@@ -1,7 +1,7 @@
 {
   "name": "ikasi",
   "version": "1.0.0",
-  "description": "",
+  "description": "Open-source learning and planning toolkit",
   "main": "./js/app.js",
   "scripts": {
     "build:windows-x64": "npm run compile:* && node ./js/build.js windows-x64",
