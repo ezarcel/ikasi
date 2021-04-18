@@ -1,9 +1,10 @@
 /img/
+/js/
 /node_modules/
-.gitignore
-.prettierignore
-LICENSE
-*.js
-*.js.map
-*.css
-*.css.map
+/out/
+/src/css/
+/src/js/
+
+/.gitignore
+/.prettierignore
+/LICENSE

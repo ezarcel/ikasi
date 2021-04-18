@@ -2,14 +2,14 @@
   "compilerOptions": {
     "baseUrl": "./",
     "esModuleInterop": true,
-    "lib": ["DOM", "DOM.Iterable", "ES2017"],
+    "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "module": "CommonJS",
     "moduleResolution": "node",
     "noImplicitAny": true,
     "outDir": "./js",
     "removeComments": true,
     "rootDir": "./",
-    "target": "ES2017"
+    "target": "ES2020"
   },
   "exclude": ["./node_modules", "./src"]
 }

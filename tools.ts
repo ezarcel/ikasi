@@ -1,6 +1,6 @@
-import { app } from 'electron';
-import { readdir, stat } from 'fs-extra';
-import p from 'path';
+import { app } from "electron";
+import { readdir, stat } from "fs-extra";
+import p from "path";
 
 export const exists = (path: string) =>
   stat(path)
@@ -41,7 +41,7 @@ export async function recursive(
   } = {}
 ) {
   const _startPath = p.normalize(startPath);
-  const startDeepness = _startPath.split('/').length - 2;
+  const startDeepness = _startPath.split("/").length - 2;
   const enableDeepness = maxDeepness >= 0;
 
   async function doIt(parent: string, deepness: number) {
@@ -55,13 +55,13 @@ export async function recursive(
         (await filterAsync(contents, async child => await fileExists(p.join(parent, child)))).forEach(file => {
           if (!callback) return;
           const fFile = p.join(parent, file);
-          callback(useRelativePath ? fFile.split('/').slice(startDeepness).join('/') : fFile);
+          callback(useRelativePath ? fFile.split("/").slice(startDeepness).join("/") : fFile);
         });
     } catch (e) {
-      if (!hideWarnings && (e as any).code === 'EPERM') console.warn(`[WARNING] Lacking permissions to read ${parent}`);
+      if (!hideWarnings && (e as any).code === "EPERM") console.warn(`[WARNING] Lacking permissions to read ${parent}`);
     }
   }
   doIt(_startPath, 0);
 }
 
-export const appPath = app?.isPackaged ? p.join(process.resourcesPath, 'app') : process.cwd();
+export const appPath = app?.isPackaged ? p.join(process.resourcesPath, "app") : process.cwd();

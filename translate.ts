@@ -1,20 +1,20 @@
-import { appPath } from './tools';
+import { appPath } from "./tools";
 
-import { readJSON, writeJSON } from 'fs-extra';
-import p from 'path';
+import { readJSON, writeJSON } from "fs-extra";
+import p from "path";
 
 export async function importTranslations(): Promise<{
   [key: string]: { [key: string]: string };
 }>;
 export async function importTranslations(language: string): Promise<{ [key: string]: string }>;
 export async function importTranslations(language?: string) {
-  const path = p.join(appPath, 'translations.json');
+  const path = p.join(appPath, "translations.json");
   const translations = language ? (await readJSON(path))[language] : await readJSON(path);
-  if (language) translations['lang-code'] = language;
+  if (language) translations["lang-code"] = language;
   else
     Object.keys(translations)
       .sort()
-      .forEach(language => (translations[language]['lang-code'] = language));
+      .forEach(language => (translations[language]["lang-code"] = language));
   return translations;
 }
 
@@ -35,13 +35,13 @@ async function prettifyTranslations() {
     .sort()
     .forEach(language => {
       newTranslations[language] = {
-        'product-name': translations[language]['product-name']
+        "product-name": translations[language]["product-name"]
       };
       Object.keys(translations[language])
-        .filter(e => e !== 'lang-code')
+        .filter(e => e !== "lang-code")
         .sort()
         .forEach(translation => (newTranslations[language][translation] = translations[language][translation]));
     });
-  writeJSON('translations.json', newTranslations, { spaces: 2 });
+  writeJSON("translations.json", newTranslations, { spaces: 2 });
 }
 if (require?.main === module) prettifyTranslations();

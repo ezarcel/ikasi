@@ -10,7 +10,7 @@ class ToDo extends HTMLElement implements IToDo {
   #time: HTMLInputElement;
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' }).innerHTML = `
+    this.attachShadow({ mode: "open" }).innerHTML = `
 			<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 			<style>
 				* {
@@ -160,32 +160,32 @@ class ToDo extends HTMLElement implements IToDo {
 			</div>
 		`;
 
-    this.#toDo = this.shadowRoot.querySelector('#to-do');
-    this.#title = this.shadowRoot.querySelector('#title');
-    this.#description = this.shadowRoot.querySelector('#description');
-    this.#checkbox = this.shadowRoot.querySelector('#checkbox');
-    this.#delete = this.shadowRoot.querySelector('#delete');
-    this.#date = this.shadowRoot.querySelector('#date');
-    this.#time = this.shadowRoot.querySelector('#time');
+    this.#toDo = this.shadowRoot.querySelector("#to-do");
+    this.#title = this.shadowRoot.querySelector("#title");
+    this.#description = this.shadowRoot.querySelector("#description");
+    this.#checkbox = this.shadowRoot.querySelector("#checkbox");
+    this.#delete = this.shadowRoot.querySelector("#delete");
+    this.#date = this.shadowRoot.querySelector("#date");
+    this.#time = this.shadowRoot.querySelector("#time");
 
-    this.addEventListener('blur', () => {
-      this.dispatchEvent(new CustomEvent('edited'));
+    this.addEventListener("blur", () => {
+      this.dispatchEvent(new CustomEvent("edited"));
     });
-    this.#checkbox.addEventListener('input', () => {
-      this.dispatchEvent(new CustomEvent('edited'));
+    this.#checkbox.addEventListener("input", () => {
+      this.dispatchEvent(new CustomEvent("edited"));
     });
 
-    this.#delete.addEventListener('click', () => {
-      this.dispatchEvent(new CustomEvent('delete'));
+    this.#delete.addEventListener("click", () => {
+      this.dispatchEvent(new CustomEvent("delete"));
     });
   }
   connectedCallback() {
     if (!this.#ready) {
       this.#ready = true;
-      this.dispatchEvent(new CustomEvent('ready'));
+      this.dispatchEvent(new CustomEvent("ready"));
     }
 
-    this.#toDo.classList.add('animatable');
+    this.#toDo.classList.add("animatable");
   }
 
   get description() {
@@ -233,4 +233,4 @@ class ToDo extends HTMLElement implements IToDo {
     };
   }
 }
-window.customElements.define('to-do', ToDo);
+window.customElements.define("to-do", ToDo);

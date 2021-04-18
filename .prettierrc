@@ -5,7 +5,7 @@
   "jsxSingleQuote": true,
   "printWidth": 125,
   "quoteProps": "as-needed",
-  "singleQuote": true,
+  "singleQuote": false,
   "tabWidth": 2,
   "trailingComma": "none"
 }

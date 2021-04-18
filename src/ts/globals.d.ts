@@ -1,7 +1,7 @@
 declare global {
   interface ParentNode {
-    querySelector(selector: 'map-bubble'): Bubble;
-    querySelectorAll(selectors: 'map-bubble'): NodeListOf<Bubble>;
+    querySelector(selector: "map-bubble"): Bubble;
+    querySelectorAll(selectors: "map-bubble"): NodeListOf<Bubble>;
   }
   interface ikasiImage {
     base64Image: string;
@@ -22,9 +22,9 @@ declare global {
     x: number;
     y: number;
   }
-  type MindMapExportingFormat = 'png' | 'jpeg' | 'pdf';
+  type MindMapExportingFormat = "png" | "jpeg" | "pdf";
   type MindMapLink = [string, string];
-  type MindMapImageFormat = 'png' | 'jpg' | 'jpeg' | 'gif' | 'webp' | 'avif';
+  type MindMapImageFormat = "png" | "jpg" | "jpeg" | "gif" | "webp" | "avif";
   interface MindMapImage {
     base64Image: string;
     format: MindMapImageFormat;
@@ -47,9 +47,9 @@ declare global {
     links: MindMapLink[];
     settings: MindMapSettings;
   }
-  type BubbleDragMode = 'resize' | 'move';
-  type BubbleStatus = 'expanded' | 'normal';
-  type BubbleResizeDirection = 'tl' | 'tr' | 'bl' | 'br';
+  type BubbleDragMode = "resize" | "move";
+  type BubbleStatus = "expanded" | "normal";
+  type BubbleResizeDirection = "tl" | "tr" | "bl" | "br";
 
   interface ICard {
     backgroundColor: string;

@@ -4,32 +4,44 @@
   "description": "Open-source learning and planning toolkit",
   "main": "./js/app.js",
   "scripts": {
-    "build:windows-x64": "npm run compile:* && node ./js/build.js windows-x64",
     "compile:*": "npm run compile:client-ts && npm run compile:sass && npm run compile:server-ts",
-    "compile:client-ts": "npx tsc -p ./src/ts/tsconfig.json",
-    "compile:sass": "npx sass ./src/scss:./src/css -s compressed --update",
-    "compile:server-ts": "npx tsc -p ./tsconfig.json",
-    "format": "npx prettier -w **/*",
+    "compile:client-ts": "tsc -p ./src/ts/tsconfig.json",
+    "compile:sass": "sass ./src/scss:./src/css -s compressed --update",
+    "compile:server-ts": "tsc -p ./tsconfig.json",
+    "format": "prettier -w **/*",
     "start": "npm run compile:* && electron .",
-    "start:dev": "electron --trace-warnings .",
-    "watch:client-ts": "npx tsc -w -p ./src/ts/tsconfig.json",
-    "watch:sass": "npx sass ./src/scss:./src/css -s compressed --update --watch",
-    "watch:server-ts": "npx tsc -w -p ./tsconfig.json"
+    "start:dev": "electron .",
+    "watch:client-ts": "tsc -w -p ./src/ts/tsconfig.json",
+    "watch:sass": "sass ./src/scss:./src/css -s compressed --update --watch",
+    "watch:server-ts": "tsc -w -p ./tsconfig.json",
+    "package": "npm run compile:* && electron-forge package",
+    "make:*": "npm run compile:* && electron-forge make --arch ia32 --platform win32 --targets @electron-forge/maker-squirrel && electron-forge make --arch x64 --platform win32 --targets @electron-forge/maker-squirrel && electron-forge make --arch arm64 --platform win32 --targets @electron-forge/maker-squirrel",
+    "make:win32-ia32": "npm run compile:* && electron-forge make --arch ia32 --platform win32 --targets @electron-forge/maker-squirrel",
+    "make:win32-x64": "npm run compile:* && electron-forge make --arch x64 --platform win32 --targets @electron-forge/maker-squirrel",
+    "make:win32-arm64": "npm run compile:* && electron-forge make --arch arm64 --platform win32 --targets @electron-forge/maker-squirrel"
   },
-  "author": "ezarcel",
+  "author": {
+    "name": "ezarcel",
+    "url": "https://google.com"
+  },
   "license": "UNLICENSED",
   "dependencies": {
+    "@electron-forge/maker-flatpak": "*",
     "custom-electron-titlebar": "^3.2.6",
     "electron-squirrel-startup": "^1.0.0",
     "fs-extra": "^9.1.0",
     "mime-types": "^2.1.30",
     "moment": "^2.29.1",
-    "prettier": "^2.2.1",
     "puppeteer": "^8.0.0",
     "sweetalert2": "^10.16.2",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@electron-forge/cli": "^6.0.0-beta.54",
+    "@electron-forge/maker-deb": "^6.0.0-beta.54",
+    "@electron-forge/maker-rpm": "^6.0.0-beta.54",
+    "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
+    "@electron-forge/maker-zip": "^6.0.0-beta.54",
     "@types/fs-extra": "^9.0.11",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^14.14.41",
@@ -37,9 +49,12 @@
     "@types/sass": "^1.16.0",
     "@types/uuid": "^8.3.0",
     "electron": "^12.0.4",
-    "electron-packager": "^15.2.0",
-    "electron-winstaller": "^5.0.0",
+    "electron-installer-windows": "^3.0.0",
+    "prettier": "^2.2.1",
     "sass": "^1.32.8",
     "typescript": "^4.2.4"
+  },
+  "config": {
+    "forge": "./js/forge.config.js"
   }
 }

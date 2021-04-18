@@ -1,22 +1,22 @@
-const { Color } = require('./js/tools') as typeof import('../tools');
+const { Color } = require("./js/tools") as typeof import("../tools");
 
 class Card extends HTMLElement {
   #animationDuration = (1 / 3) * 1000;
 
   #backgroundColor: string;
   #defaultColors = [
-    { color: '#ff0088', name: '[{(color.fuchsia)}]' },
-    { color: '#ff3333', name: '[{(color.red)}]' },
-    { color: '#fc626a', name: '[{(color.coral)}]' },
-    { color: '#ff7700', name: '[{(color.orange)}]' },
-    { color: '#e0e022', name: '[{(color.yellow)}]' },
-    { color: '#33ee00', name: '[{(color.lime)}]' },
-    { color: '#00bb11', name: '[{(color.green)}]' },
-    { color: '#11eeee', name: '[{(color.aqua)}]' },
-    { color: '#00bbff', name: '[{(color.sky-blue)}]' },
-    { color: '#2244bb', name: '[{(color.sea-blue)}]' },
-    { color: '#7711ff', name: '[{(color.purple)}]' },
-    { color: '#ee55ee', name: '[{(color.pink)}]' }
+    { color: "#ff0088", name: "[{(color.fuchsia)}]" },
+    { color: "#ff3333", name: "[{(color.red)}]" },
+    { color: "#fc626a", name: "[{(color.coral)}]" },
+    { color: "#ff7700", name: "[{(color.orange)}]" },
+    { color: "#e0e022", name: "[{(color.yellow)}]" },
+    { color: "#33ee00", name: "[{(color.lime)}]" },
+    { color: "#00bb11", name: "[{(color.green)}]" },
+    { color: "#11eeee", name: "[{(color.aqua)}]" },
+    { color: "#00bbff", name: "[{(color.sky-blue)}]" },
+    { color: "#2244bb", name: "[{(color.sea-blue)}]" },
+    { color: "#7711ff", name: "[{(color.purple)}]" },
+    { color: "#ee55ee", name: "[{(color.pink)}]" }
   ];
   #foldRatio = 0.075;
   #image: ikasiImage;
@@ -30,7 +30,7 @@ class Card extends HTMLElement {
   #controls: HTMLDivElement;
   #deleteCard: HTMLDivElement;
   connectedCallback() {
-    this.attachShadow({ mode: 'open' }).innerHTML = `
+    this.attachShadow({ mode: "open" }).innerHTML = `
 			<link rel="stylesheet" href="https://kit-pro.fontawesome.com/releases/latest/css/pro.min.css">
 			<style>
 				* {
@@ -196,35 +196,35 @@ class Card extends HTMLElement {
 			</div>
 		`;
 
-    this.#card = this.shadowRoot.querySelector('#card');
-    this.#controls = this.#card.querySelector('#controls-wrapper');
+    this.#card = this.shadowRoot.querySelector("#card");
+    this.#controls = this.#card.querySelector("#controls-wrapper");
 
-    this.#addImage = this.#controls.querySelector('#add-image-container');
-    this.#content = this.#card.querySelector('#content');
-    this.#deleteCard = this.#controls.querySelector('#delete-card-container');
-    this.#img = this.#card.querySelector('img');
-    this.#subtitle = this.#card.querySelector('#subtitle');
-    this.#title = this.#card.querySelector('#title');
+    this.#addImage = this.#controls.querySelector("#add-image-container");
+    this.#content = this.#card.querySelector("#content");
+    this.#deleteCard = this.#controls.querySelector("#delete-card-container");
+    this.#img = this.#card.querySelector("img");
+    this.#subtitle = this.#card.querySelector("#subtitle");
+    this.#title = this.#card.querySelector("#title");
 
-    this.#addImage.addEventListener('click', () => this.dispatchEvent(new CustomEvent('add-image')));
+    this.#addImage.addEventListener("click", () => this.dispatchEvent(new CustomEvent("add-image")));
     this.#defaultColors.forEach(({ color, name }) => {
-      const colorE = document.createElement('div');
+      const colorE = document.createElement("div");
       this.#controls.appendChild(colorE);
-      colorE.classList.add('color');
-      colorE.setAttribute('color', color);
+      colorE.classList.add("color");
+      colorE.setAttribute("color", color);
       colorE.style.backgroundColor = color;
       colorE.title = `${name} (${color})`;
-      colorE.addEventListener('click', () => {
-        this.backgroundColor = colorE.getAttribute('color');
+      colorE.addEventListener("click", () => {
+        this.backgroundColor = colorE.getAttribute("color");
       });
     });
-    this.#deleteCard.addEventListener('click', () => this.dispatchEvent(new CustomEvent('delete-card')));
-    this.#img.addEventListener('click', () => this.dispatchEvent(new CustomEvent('remove-image')));
+    this.#deleteCard.addEventListener("click", () => this.dispatchEvent(new CustomEvent("delete-card")));
+    this.#img.addEventListener("click", () => this.dispatchEvent(new CustomEvent("remove-image")));
 
     this.backgroundColor = this.#defaultColors[Math.round(Math.random() * (this.#defaultColors.length - 1))].color;
 
-    this.dispatchEvent(new CustomEvent('ready'));
-    this.#card.classList.add('animatable');
+    this.dispatchEvent(new CustomEvent("ready"));
+    this.#card.classList.add("animatable");
   }
 
   get backgroundColor() {
@@ -233,9 +233,9 @@ class Card extends HTMLElement {
   set backgroundColor(backgroundColor) {
     const textColor = Color.textColor(backgroundColor);
     this.#backgroundColor = backgroundColor;
-    this.#card.style.setProperty('--background-color', backgroundColor);
-    this.#card.style.setProperty('--fold-color', Color.brighten(backgroundColor, textColor === '#000000' ? -34 : 34));
-    this.#card.style.setProperty('--color', textColor);
+    this.#card.style.setProperty("--background-color", backgroundColor);
+    this.#card.style.setProperty("--fold-color", Color.brighten(backgroundColor, textColor === "#000000" ? -34 : 34));
+    this.#card.style.setProperty("--color", textColor);
   }
 
   get image() {
@@ -243,10 +243,10 @@ class Card extends HTMLElement {
   }
   set image(image: ikasiImage | null) {
     if (image) {
-      this.#img.src = `data:image/${image.format.replace('jpg', 'jpeg')};base64,${image.base64Image}`;
+      this.#img.src = `data:image/${image.format.replace("jpg", "jpeg")};base64,${image.base64Image}`;
       this.#image = image;
     } else {
-      this.#img.src = '';
+      this.#img.src = "";
       this.#image = null;
     }
   }
@@ -282,4 +282,4 @@ class Card extends HTMLElement {
     };
   }
 }
-window.customElements.define('i-card', Card);
+window.customElements.define("i-card", Card);

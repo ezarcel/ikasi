@@ -1,4 +1,4 @@
-@import 'theming';
+@import "theming";
 
 * {
   box-sizing: border-box;
@@ -159,7 +159,7 @@ body {
         background-color: #aaa;
 
         &::before {
-          content: '';
+          content: "";
           position: absolute;
           height: 100%;
           width: 35px;
